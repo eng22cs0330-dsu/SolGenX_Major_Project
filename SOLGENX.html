@@ -12,6 +12,102 @@
 <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script defer src="SOLGENX.js"></script>
 
+<style>
+/* =====================================
+   STARTUP LOADER (IMPROVED)
+===================================== */
+#introScreen{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, #000814, #000000);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    color: #00f7ff;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    transition: opacity 0.8s ease, visibility 0.8s;
+}
+
+/* Sun animation */
+.sun-system{
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin-bottom: 20px;
+}
+
+.sun-core{
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #ffd60a, #ff6d00);
+    border-radius: 50%;
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    box-shadow: 0 0 30px #ffae00;
+    animation: pulse 2s infinite;
+}
+
+.sun-ring, .sun-ring2{
+    position: absolute;
+    border: 2px solid #00f7ff;
+    border-radius: 50%;
+    animation: rotate 6s linear infinite;
+}
+
+.sun-ring{
+    width: 100px;
+    height: 100px;
+    top: 10px;
+    left: 10px;
+}
+
+.sun-ring2{
+    width: 120px;
+    height: 120px;
+    top: 0;
+    left: 0;
+    animation-direction: reverse;
+}
+
+/* Loading bar */
+.loading-bar{
+    width: 200px;
+    height: 6px;
+    background: #111;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.loading-fill{
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #00f7ff, #00ff88);
+    animation: loadBar 2.5s linear forwards;
+}
+
+/* Animations */
+@keyframes rotate{
+    from{ transform: rotate(0deg); }
+    to{ transform: rotate(360deg); }
+}
+
+@keyframes pulse{
+    0%,100%{ transform: scale(1); }
+    50%{ transform: scale(1.2); }
+}
+
+@keyframes loadBar{
+    from{ width: 0%; }
+    to{ width: 100%; }
+}
+</style>
+
 </head>
 
 <body>
@@ -34,167 +130,79 @@
     </div>
 </div>
 
-<!-- =====================================
-     BACKGROUND FX
-===================================== -->
+<!-- BACKGROUND -->
 <div class="stars"></div>
 <div class="grid-bg"></div>
 
-<!-- =====================================
-     HEADER
-===================================== -->
+<!-- HEADER -->
 <header>
 <h1>SOLGENX AI SOLAR COMMAND CENTER</h1>
 <p>Smart Tracking • Weather AI • Energy Analytics</p>
 </header>
 
-<!-- =====================================
-     DASHBOARD
-===================================== -->
+<!-- DASHBOARD -->
 <section class="dashboard">
 
-    <!-- ROW 1 -->
-    <div class="card">
-        <div class="title">Solar Voltage</div>
-        <div class="value" id="solarVoltage">--</div>
-    </div>
+<div class="card"><div class="title">Solar Voltage</div><div class="value" id="solarVoltage">--</div></div>
+<div class="card"><div class="title">Battery Voltage</div><div class="value" id="battery">--</div></div>
+<div class="card"><div class="title">Current</div><div class="value" id="current">--</div></div>
+<div class="card"><div class="title">Power</div><div class="value" id="power">--</div></div>
 
-    <div class="card">
-        <div class="title">Battery Voltage</div>
-        <div class="value" id="battery">--</div>
-    </div>
+<div class="card"><div class="title">Solar Horizontal Position</div><div class="value" id="sunAzimuth">--</div></div>
+<div class="card"><div class="title">Solar Vertical Position</div><div class="value" id="sunElevation">--</div></div>
+<div class="card"><div class="title">Tracker Horizontal Position</div><div class="value" id="azimuth">--</div></div>
+<div class="card"><div class="title">Tracker Vertical Position</div><div class="value" id="elevation">--</div></div>
 
-    <div class="card">
-        <div class="title">Current</div>
-        <div class="value" id="current">--</div>
-    </div>
-
-    <div class="card">
-        <div class="title">Power</div>
-        <div class="value" id="power">--</div>
-    </div>
-
-    <!-- ROW 2 (SOLAR + TRACKER FIXED TITLES) -->
-    <div class="card">
-        <div class="title">Solar Horizontal Position</div>
-        <div class="value" id="sunAzimuth">--</div>
-    </div>
-
-    <div class="card">
-        <div class="title">Solar Vertical Position</div>
-        <div class="value" id="sunElevation">--</div>
-    </div>
-
-    <div class="card">
-        <div class="title">Tracker Horizontal Position</div>
-        <div class="value" id="azimuth">--</div>
-    </div>
-
-    <div class="card">
-        <div class="title">Tracker Vertical Position</div>
-        <div class="value" id="elevation">--</div>
-    </div>
-
-    <!-- ROW 3 -->
-    <div class="card">
-        <div class="title">Temperature</div>
-        <div class="value" id="temp">--</div>
-    </div>
-
-    <div class="card">
-        <div class="title">Humidity</div>
-        <div class="value" id="humidity">--</div>
-    </div>
-
-    <div class="card">
-        <div class="title">Weather Status</div>
-        <div class="value" id="weather">--</div>
-    </div>
-
-    <div class="card mode">
-        <div class="title">Power Mode</div>
-        <div class="value" id="mode">AUTO</div>
-    </div>
+<div class="card"><div class="title">Temperature</div><div class="value" id="temp">--</div></div>
+<div class="card"><div class="title">Humidity</div><div class="value" id="humidity">--</div></div>
+<div class="card"><div class="title">Weather Status</div><div class="value" id="weather">--</div></div>
+<div class="card mode"><div class="title">Power Mode</div><div class="value" id="mode">AUTO</div></div>
 
 </section>
 
-<!-- =====================================
-     LIVE SUN PANEL (FIXED)
-===================================== -->
+<!-- SUN PANEL -->
 <section class="chart-section">
-
 <h2 class="chart-title">Live Sun Position</h2>
 
 <div class="sun-panel">
+<div class="sun-row">☀️ Solar Tracking Overview</div>
 
-    <div class="sun-row">☀️ Solar Tracking Overview</div>
+<div class="sun-row solar">Solar Horizontal : <span id="sunAzimuthBig">--</span></div>
+<div class="sun-row solar">Solar Vertical : <span id="sunElevationBig">--</span></div>
 
-    <!-- SOLAR -->
-    <div class="sun-row solar">
-        Solar Horizontal :
-        <span id="sunAzimuthBig">--</span>
-    </div>
-
-    <div class="sun-row solar">
-        Solar Vertical :
-        <span id="sunElevationBig">--</span>
-    </div>
-
-    <!-- TRACKER -->
-    <div class="sun-row tracker">
-        Tracker Horizontal :
-        <span id="azimuthBig">--</span>
-    </div>
-
-    <div class="sun-row tracker">
-        Tracker Vertical :
-        <span id="elevationBig">--</span>
-    </div>
-
+<div class="sun-row tracker">Tracker Horizontal : <span id="azimuthBig">--</span></div>
+<div class="sun-row tracker">Tracker Vertical : <span id="elevationBig">--</span></div>
 </div>
-
 </section>
 
-<!-- =====================================
-     BOT
-===================================== -->
+<!-- BOT -->
 <div id="botBtn">🤖</div>
 
 <section id="chatBox">
-
-<div id="chatContent">
-AI Ready... Waiting for commands.
-</div>
+<div id="chatContent">AI Ready... Waiting for commands.</div>
 
 <div class="button-row">
-
 <button onclick="connectSerial()">Connect Arduino</button>
 <button onclick="analyzeData()">Analyze</button>
 <button onclick="showWeather()">Weather Scan</button>
-
 </div>
-
 </section>
 
-<!-- =====================================
-     CHART
-===================================== -->
+<!-- CHART -->
 <section class="chart-section">
-
 <h2 class="chart-title">Live Solar Performance</h2>
-
 <canvas id="solarChart"></canvas>
-
 </section>
 
 <!-- =====================================
-     LOADER SCRIPT
+     LOADER SCRIPT (SMOOTH FADE)
 ===================================== -->
 <script>
 window.addEventListener("load", () => {
     setTimeout(() => {
         const intro = document.getElementById("introScreen");
-        if (intro) intro.style.display = "none";
+        intro.style.opacity = "0";
+        intro.style.visibility = "hidden";
     }, 2500);
 });
 </script>
